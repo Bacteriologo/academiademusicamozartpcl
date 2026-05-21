@@ -37,7 +37,7 @@ const EscuelaHero = ({ lang }) => (
     }}/>
 
     <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
+      <div className="mozart-hero-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
             <div style={{ width: 40, height: 3, background: '#C0392B', borderRadius: 2 }}/>
@@ -102,7 +102,7 @@ const EscuelaHero = ({ lang }) => (
         </div>
         {/* Photo side */}
         <div style={{ position: 'relative' }}>
-          <div style={{
+          <div className="mozart-hero-img" style={{
             background: '#ddd', borderRadius: 4, overflow: 'hidden',
             aspectRatio: '4/5',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -331,7 +331,7 @@ const CoursesSection = ({ lang }) => {
         <h2 style={{ fontFamily: 'Barlow Condensed', fontSize: 48, fontWeight: 800, color: '#0a0a0a', marginBottom: 40, textTransform: 'uppercase' }}>
           {t('Nuestros cursos', 'Our courses')}
         </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16 }}>
+        <div className="mozart-courses-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16 }}>
           {COURSES.map((c, i) => (
             <div key={i} style={{
               background: '#fff', borderRadius: 4, overflow: 'hidden',
