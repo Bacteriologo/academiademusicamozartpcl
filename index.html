@@ -19,6 +19,62 @@
   input, textarea, select { outline: none; }
   input:focus, textarea:focus, select:focus { border-color: #C0392B !important; }
 </style>
+
+<style>
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    /* Contact section: 2col -> 1col */
+    #contacto section > div > div:last-child,
+    section[id="contacto"] > div > div:last-child,
+    section[id="contacto"] [style*="grid-template-columns: 1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+      gap: 20px !important;
+    }
+    /* Contact section inner grids */
+    section[id="contacto"] [style*="1fr 1fr"] {
+      grid-template-columns: 1fr !important;
+    }
+    /* Footer: 4col -> 1col */
+    footer > div > div:first-child > div:first-child {
+      grid-template-columns: 1fr !important;
+    }
+    /* Footer links grid */
+    footer [style*="grid-template-columns: 2fr 1fr 1fr 1fr"] {
+      grid-template-columns: 1fr 1fr !important;
+    }
+    /* h2 headings scale down */
+    h2[style*="Barlow Condensed"] {
+      font-size: 32px !important;
+    }
+    /* Contact card padding */
+    [style*="borderRadius: 4"][style*="padding: 28"] {
+      padding: 20px !important;
+    }
+    /* Hero sections padding */
+    section[style*="padding: 100px"][style*="40px"] {
+      padding: 60px 20px !important;
+    }
+    /* Portal section cards grid */
+    [style*="grid-template-columns: repeat(3"] {
+      grid-template-columns: 1fr !important;
+    }
+  }
+  /* Extra small */
+  @media (max-width: 480px) {
+    h2[style*="Barlow Condensed"] {
+      font-size: 28px !important;
+    }
+    section[style*="padding: 80px"] {
+      padding: 48px 16px !important;
+    }
+    /* WhatsApp FAB smaller */
+    a[href*="wa.me"] {
+      padding: 10px 16px !important;
+      font-size: 13px !important;
+    }
+  }
+</style>
+
 </head>
 <body>
 <div id="root"></div>
