@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OZART — Wireframes</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #1a1a1a; font-family: 'Caveat', cursive; }
+
+  /* WIREFRAME PRIMITIVES */
+  .wf { font-family: 'Caveat', cursive; }
+
+  /* Sketchy box helper */
+  .box {
+    border: 2px solid #333;
+    background: #f5f5f0;
+    border-radius: 2px;
+    position: relative;
+  }
+  .box.dark { background: #1c1c1c; border-color: #444; }
+  .box.red { background: #c0392b; border-color: #c0392b; }
+  .box.red-outline { border-color: #c0392b; background: transparent; }
+  .box.dashed { border-style: dashed; }
+  .box.fill-mid { background: #ddd; }
+
+  .label {
+    font-family: 'Caveat', cursive;
+    font-size: 13px;
+    color: #555;
+    text-align: center;
+    padding: 4px;
+    line-height: 1.2;
+  }
+  .label.sm { font-size: 11px; }
+  .label.lg { font-size: 16px; font-weight: 700; }
+  .label.xl { font-size: 20px; font-weight: 700; }
+  .label.white { color: #fff; }
+  .label.red { color: #c0392b; }
+  .label.bold { font-weight: 700; }
+
+  .img-ph {
+    background: #ccc;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .img-ph svg { opacity: 0.4; }
+  .img-ph.dark { background: #2a2a2a; }
+
+  .arrow {
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Caveat'; font-size: 18px; color: #c0392b;
+  }
+
+  /* Annotation line */
+  .ann {
+    font-family: 'Caveat'; font-size: 12px; color: #c0392b;
+    border-left: 1.5px dashed #c0392b; padding-left: 6px;
+    line-height: 1.3;
+  }
+
+  .chip {
+    display: inline-block;
+    border: 1.5px solid #333;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-family: 'Caveat'; font-size: 13px;
+    background: #f0f0eb;
+    margin: 2px;
+  }
+  .chip.red { background: #c0392b; color: white; border-color: #c0392b; }
+  .chip.dark { background: #222; color: white; border-color: #444; }
+
+  .section-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 8px;
+  }
+</style>
+</head>
+<body>
+<script type="text/babel">
+
+/* ── SHARED SKETCH PRIMITIVES ── */
+const Box = ({w, h, dark, red, redOutline, dashed, fillMid, style, children, className=""}) => (
+  <div className={`box ${dark?'dark':''} ${red?'red':''} ${redOutline?'red-outline':''} ${dashed?'dashed':''} ${fillMid?'fill-mid':''} ${className}`}
+    style={{width: w, height: h, ...style}}>
+    {children}
+  </div>
+);
+
+const ImgPh = ({w, h, dark, label, style}) => (
+  <div className={`img-ph ${dark?'dark':''}`} style={{width:w, height:h, ...style}}>
+    <div style={{textAlign:'center'}}>
+      <svg width="32" height="32" viewBox="0 0 24 24" fill={dark?'#666':'#999'}>
+        <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+        <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+        <path d="M3 16l5-5 4 4 3-3 6 6" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+      </svg>
+      {label && <div className="label sm" style={{color: dark?'#666':'#aaa'}}>{label}</div>}
+    </div>
+  </div>
+);
+
+const Lbl = ({children, lg, xl, sm, white, red, bold, center, style}) => (
+  <div className={`label ${lg?'lg':''} ${xl?'xl':''} ${sm?'sm':''} ${white?'white':''} ${red?'red':''} ${bold?'bold':''}`}
+    style={{textAlign: center?'center':'left', ...style}}>
+    {children}
+  </div>
+);
+
+const Ann = ({children}) => <div className="ann">{children}</div>;
+
+const Row = ({children, gap=8, align='stretch', style}) => (
+  <div style={{display:'flex', flexDirection:'row', gap, alignItems:align, ...style}}>{children}</div>
+);
+const Col = ({children, gap=6, style}) => (
+  <div style={{display:'flex', flexDirection:'column', gap, ...style}}>{children}</div>
+);
+
+const NavBar = ({dark, items=[], rightBtn}) => (
+  <Box dark={dark} h={44} style={{display:'flex', alignItems:'center', padding:'0 12px', justifyContent:'space-between', width:'100%'}}>
+    <Row gap={6} align="center">
+      {/* Logo mark */}
+      <svg width="22" height="22" viewBox="0 0 22 22">
+        <polygon points="11,2 22,20 0,20" fill={dark?'#c0392b':'#c0392b'} opacity="0.9"/>
+        <polygon points="8,5 16,18 4,18" fill={dark?'#fff':'#fff'} opacity="0.5"/>
+        <circle cx="8" cy="17" r="2.5" fill={dark?'#c0392b':'#c0392b'}/>
+      </svg>
+      <Lbl bold white={dark} style={{fontSize:15}}>MOZART</Lbl>
+    </Row>
+    <Row gap={10} align="center">
+      {items.map((it,i) => <Lbl key={i} sm white={dark} style={{opacity:0.8}}>{it}</Lbl>)}
+    </Row>
+    {rightBtn && <Box red style={{padding:'4px 10px', borderRadius:3}}><Lbl white sm bold>{rightBtn}</Lbl></Box>}
+  </Box>
+);
+
+const Btn = ({label, red, outline, dark, full, sm}) => (
+  <Box red={red} dark={dark} redOutline={outline}
+    style={{display:'inline-flex', alignItems:'center', justifyContent:'center',
+      padding: sm?'4px 10px':'6px 14px', borderRadius:3, width: full?'100%':'auto'}}>
+    <Lbl white={red||dark} red={outline} sm={sm} bold>{label}</Lbl>
+  </Box>
+);
+
+const Divider = ({label}) => (
+  <div style={{display:'flex', alignItems:'center', gap:8, margin:'4px 0'}}>
+    <div style={{flex:1, height:1, background:'#ddd'}}></div>
+    {label && <Lbl sm style={{color:'#aaa', whiteSpace:'nowrap'}}>{label}</Lbl>}
+    <div style={{flex:1, height:1, background:'#ddd'}}></div>
+  </div>
+);
+
+/* ═══════════════════════════════════════════════
+   WIREFRAME A — "SPLIT WORLD"
+   Toggle nav switches between Escuela ↔ Studio
+═══════════════════════════════════════════════ */
+const WireframeA = () => {
+  const W = 420;
+  return (
+    <Col gap={0} style={{width:W, fontFamily:'Caveat'}}>
+
+      {/* ── NAV ── */}
+      <Box style={{width:W, background:'#0d0d0d', padding:'8px 14px', display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+        <Row gap={6} align="center">
+          <svg width="20" height="20" viewBox="0 0 22 22">
+            <polygon points="11,2 22,20 0,20" fill="#c0392b"/>
+            <polygon points="8,5 16,18 4,18" fill="#fff" opacity="0.4"/>
+            <circle cx="8" cy="17" r="2.5" fill="#c0392b"/>
+          </svg>
+          <Lbl white bold style={{fontSize:15}}>MOZART</Lbl>
+        </Row>
+        {/* Mode toggle */}
+        <Row gap={0} align="center">
+          <Box style={{background:'#fff', padding:'3px 12px', borderRadius:'3px 0 0 3px', border:'none'}}>
+            <Lbl sm bold style={{color:'#111'}}>Escuela</Lbl>
+          </Box>
+          <Box style={{background:'transparent', padding:'3px 12px', borderRadius:'0 3px 3px 0', border:'1px solid #444'}}>
+            <Lbl sm bold white>Studio</Lbl>
+          </Box>
+        </Row>
+        <Box red style={{padding:'3px 10px', borderRadius:3}}>
+          <Lbl white sm bold>Inscríbete</Lbl>
+        </Box>
+      </Box>
+
+      {/* ── HERO — ESCUELA ── */}
+      <Box style={{width:W, background:'#f7f7f5', padding:20, position:'relative', minHeight:200}}>
+        <Row gap={16} align="center">
+          <Col gap={8} style={{flex:1}}>
+            <div style={{background:'#c0392b', width:32, height:3, borderRadius:2}}></div>
+            <Lbl xl bold style={{lineHeight:1.1, fontSize:26}}>Aprende música<br/>& arte hoy.</Lbl>
+            <Lbl style={{color:'#666', fontSize:13, lineHeight:1.4}}>Escuela Contemporánea de Música<br/>en Pucallpa, Perú</Lbl>
+            <Row gap={8} style={{marginTop:4}}>
+              <Btn label="Reservar clase" red/>
+              <Btn label="Ver cursos" outline/>
+            </Row>
+          </Col>
+          <ImgPh w={150} h={160} label="foto\nhero" style={{borderRadius:4, flexShrink:0}}/>
+        </Row>
+        {/* WhatsApp FAB */}
+        <div style={{position:'absolute', bottom:12, right:12}}>
+          <Box style={{background:'#25D366', border:'none', borderRadius:24, padding:'4px 10px', display:'flex', alignItems:'center', gap:4}}>
+            <div style={{width:14, height:14, background:'white', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', fontSize:9}}>💬</div>
+            <Lbl white sm bold>WhatsApp</Lbl>
+          </Box>
+        </div>
+        <Ann>Hero claro<br/>Escuela first</Ann>
+      </Box>
+
+      {/* ── RESERVA FLOW ── */}
+      <Box style={{width:W, background:'#fff', padding:16}}>
+        <Lbl bold style={{fontSize:15, marginBottom:10}}>📅 Reservar una clase</Lbl>
+        {/* Step 1 */}
+        <Row gap={0} style={{marginBottom:10}}>
+          <Box style={{background:'#c0392b', width:22, height:22, display:'flex', alignItems:'center', justifyContent:'center', borderRadius:'50%', border:'none', flexShrink:0}}>
+            <Lbl white sm bold>1</Lbl>
+          </Box>
+          <Lbl sm style={{marginLeft:8, marginTop:3}}>Elige tu instrumento o curso</Lbl>
+        </Row>
+        <Row gap={6} style={{flexWrap:'wrap', marginBottom:14}}>
+          {['🎸 Guitarra','🎹 Piano','🎤 Canto','🎻 Violín','🥁 Batería','✏️ Dibujo','🎨 Pintura'].map((it,i)=>(
+            <div key={i} className="chip" style={i===0?{background:'#c0392b', color:'white', border:'none'}:{}}>{it}</div>
+          ))}
+        </Row>
+        {/* Step 2 */}
+        <Row gap={0} style={{marginBottom:8}}>
+          <Box style={{background:'#c0392b', width:22, height:22, display:'flex', alignItems:'center', justifyContent:'center', borderRadius:'50%', border:'none', flexShrink:0}}>
+            <Lbl white sm bold>2</Lbl>
+          </Box>
+          <Lbl sm style={{marginLeft:8, marginTop:3}}>Elige horario disponible</Lbl>
+        </Row>
+        {/* Mini calendar */}
+        <Box fillMid style={{padding:8, marginBottom:10}}>
+          <Row gap={4} style={{justifyContent:'space-between', marginBottom:6}}>
+            {['L','M','X','J','V','S'].map((d,i)=>(
+              <Box key={i} style={{flex:1, textAlign:'center', padding:'3px 0', background: i===2?'#c0392b':'#e5e5e0', border:'none', borderRadius:2}}>
+                <Lbl sm white={i===2} style={{fontSize:11}}>{d}</Lbl>
+              </Box>
+            ))}
+          </Row>
+          <Row gap={4} style={{flexWrap:'wrap'}}>
+            {['9:00','10:00','11:00','15:00','16:00','17:00'].map((t,i)=>(
+              <Box key={i} style={{padding:'2px 8px', background: i===1?'#c0392b':'#f0f0ec', border:'none', borderRadius:10}}>
+                <Lbl sm white={i===1} style={{fontSize:11}}>{t}</Lbl>
+              </Box>
+            ))}
+          </Row>
+        </Box>
+        <Btn label="Confirmar reserva →" red full/>
+        <Ann>Flujo: curso → horario → confirmar</Ann>
+      </Box>
+
+      {/* ── CURSOS GRID ── */}
+      <Box style={{width:W, background:'#f7f7f5', padding:16}}>
+        <Lbl bold style={{fontSize:15, marginBottom:10}}>Nuestros cursos</Lbl>
+        <div style={{display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:8}}>
+          {[
+            {icon:'🎸',name:'Guitarra'},{icon:'🎹',name:'Piano'},{icon:'🎤',name:'Canto'},
+            {icon:'🎻',name:'Violín'},{icon:'🥁',name:'Batería'},{icon:'🎨',name:'Artes'}
+          ].map((c,i)=>(
+            <Box key={i} style={{background:'#fff', padding:10, textAlign:'center', border:'1.5px solid #e0e0dc'}}>
+              <div style={{fontSize:22}}>{c.icon}</div>
+              <Lbl sm bold style={{marginTop:4}}>{c.name}</Lbl>
+            </Box>
+          ))}
+        </div>
+      </Box>
+
+      {/* ── STUDIO TEASER ── */}
+      <Box dark style={{width:W, padding:16, background:'#111'}}>
+        <Row gap={12} align="center">
+          <ImgPh w={110} h={80} dark label="studio\nfoto" style={{borderRadius:3, flexShrink:0}}/>
+          <Col gap={6}>
+            <div style={{background:'#c0392b', width:24, height:2}}></div>
+            <Lbl white bold style={{fontSize:14}}>Mozart Studio</Lbl>
+            <Lbl white sm style={{opacity:0.7, lineHeight:1.3}}>Grabación profesional,<br/>doblajes, voz en off</Lbl>
+            <Btn label="Ver Studio →" outline/>
+          </Col>
+        </Row>
+        <Ann>Teaser del Studio<br/>→ cambia al modo oscuro</Ann>
+      </Box>
+
+      {/* ── PORTAL ESTUDIANTES ── */}
+      <Box style={{width:W, background:'#fff', padding:16}}>
+        <Row gap={8} align="center" style={{marginBottom:10}}>
+          <div style={{background:'#c0392b', width:4, height:22, borderRadius:2}}></div>
+          <Lbl bold style={{fontSize:15}}>Portal del Estudiante</Lbl>
+        </Row>
+        <Row gap={8} style={{marginBottom:12}}>
+          <Box fillMid style={{flex:1, padding:10, textAlign:'center'}}>
+            <div style={{fontSize:20}}>📅</div>
+            <Lbl sm bold>Mi horario</Lbl>
+          </Box>
+          <Box fillMid style={{flex:1, padding:10, textAlign:'center'}}>
+            <div style={{fontSize:20}}>📚</div>
+            <Lbl sm bold>Materiales</Lbl>
+          </Box>
+          <Box fillMid style={{flex:1, padding:10, textAlign:'center'}}>
+            <div style={{fontSize:20}}>🏆</div>
+            <Lbl sm bold>Progreso</Lbl>
+          </Box>
+        </Row>
+        <Row gap={8}>
+          <Box style={{flex:1, padding:'6px', border:'1.5px solid #ddd', borderRadius:2}}>
+            <Lbl sm style={{color:'#aaa'}}>Usuario / email</Lbl>
+          </Box>
+          <Box style={{flex:1, padding:'6px', border:'1.5px solid #ddd', borderRadius:2}}>
+            <Lbl sm style={{color:'#aaa'}}>Contraseña</Lbl>
+          </Box>
+          <Btn label="Entrar" red sm/>
+        </Row>
+        <Ann>Login simple → dashboard</Ann>
+      </Box>
+
+      {/* ── FOOTER ── */}
+      <Box dark style={{width:W, padding:14, background:'#0d0d0d'}}>
+        <Row gap={8} align="center" style={{justifyContent:'space-between'}}>
+          <Lbl white sm>Jr. las Alamedas, Pucallpa</Lbl>
+          <Row gap={6}>
+            {['fb','ig','tt'].map(s=>(
+              <Box key={s} style={{width:24, height:24, background:'#333', border:'none', borderRadius:3, display:'flex', alignItems:'center', justifyContent:'center'}}>
+                <Lbl white sm style={{fontSize:10}}>{s}</Lbl>
+              </Box>
+            ))}
+          </Row>
+        </Row>
+      </Box>
+
+    </Col>
+  );
+};
+
+/* ═══════════════════════════════════════════════
+   WIREFRAME B — "UNIFIED FLOW"
+   Un scroll continuo — color transition en Studio
+═══════════════════════════════════════════════ */
+const WireframeB = () => {
+  const W = 420;
+  return (
+    <Col gap={0} style={{width:W}}>
+
+      {/* ── NAV — Sticky, unificado ── */}
+      <Box style={{width:W, background:'#fff', padding:'8px 14px', display:'flex', justifyContent:'space-between', alignItems:'center', borderBottom:'2px solid #111'}}>
+        <Row gap={6} align="center">
+          <svg width="20" height="20" viewBox="0 0 22 22">
+            <polygon points="11,2 22,20 0,20" fill="#c0392b"/>
+            <polygon points="8,5 16,18 4,18" fill="#111" opacity="0.4"/>
+            <circle cx="8" cy="17" r="2.5" fill="#c0392b"/>
+          </svg>
+          <Lbl bold style={{fontSize:15}}>MOZART</Lbl>
+        </Row>
+        <Row gap={12} align="center">
+          <Lbl sm>Cursos</Lbl>
+          <Lbl sm>Studio</Lbl>
+          <Lbl sm>Portal</Lbl>
+          <Lbl sm>Contacto</Lbl>
+        </Row>
+        <Box red style={{padding:'3px 10px', borderRadius:3}}>
+          <Lbl white sm bold>Inscríbete</Lbl>
+        </Box>
+      </Box>
+
+      {/* ── HERO — Dos mitades ── */}
+      <Row gap={0} style={{width:W, height:180}}>
+        {/* Izquierda: Escuela */}
+        <div style={{flex:1, background:'#f7f7f5', padding:16, display:'flex', flexDirection:'column', justifyContent:'center', borderRight:'3px solid #111'}}>
+          <div style={{background:'#c0392b', width:24, height:3, marginBottom:8}}></div>
+          <Lbl xl bold style={{fontSize:18, lineHeight:1.1}}>Escuela<br/>de Música</Lbl>
+          <Lbl style={{fontSize:12, color:'#666', marginTop:4}}>Clases presenciales</Lbl>
+          <Btn label="Ver cursos →" red/>
+        </div>
+        {/* Derecha: Studio */}
+        <div style={{flex:1, background:'#111', padding:16, display:'flex', flexDirection:'column', justifyContent:'center'}}>
+          <div style={{background:'#c0392b', width:24, height:3, marginBottom:8}}></div>
+          <Lbl white xl bold style={{fontSize:18, lineHeight:1.1}}>Mozart<br/>Studio</Lbl>
+          <Lbl white style={{fontSize:12, opacity:0.6, marginTop:4}}>Grabación pro</Lbl>
+          <Btn label="Ver Studio →" outline/>
+        </div>
+      </Row>
+      <div style={{padding:'4px 8px', background:'#fef8e7', borderBottom:'1px solid #f0e0b0'}}>
+        <Ann>Split hero: ambos mundos visibles de entrada</Ann>
+      </div>
+
+      {/* ── RESERVA — Inline en homepage ── */}
+      <Box style={{width:W, background:'#c0392b', padding:16}}>
+        <Lbl white bold style={{fontSize:15, marginBottom:10}}>¿Qué quieres aprender?</Lbl>
+        <Row gap={6} style={{flexWrap:'wrap', marginBottom:12}}>
+          {['Guitarra','Piano','Canto','Violín','Batería','Dibujo','Pintura'].map((it,i)=>(
+            <div key={i} className="chip" style={{
+              background: i===0?'#fff':'transparent',
+              color: i===0?'#c0392b':'white',
+              borderColor: i===0?'white':'rgba(255,255,255,0.5)'
+            }}>{it}</div>
+          ))}
+        </Row>
+        <Row gap={8}>
+          <Box style={{flex:1, padding:'6px', background:'rgba(255,255,255,0.15)', border:'1px solid rgba(255,255,255,0.3)', borderRadius:2}}>
+            <Lbl white sm>Tu nombre</Lbl>
+          </Box>
+          <Box style={{flex:1, padding:'6px', background:'rgba(255,255,255,0.15)', border:'1px solid rgba(255,255,255,0.3)', borderRadius:2}}>
+            <Lbl white sm>WhatsApp</Lbl>
+          </Box>
+          <Box style={{background:'#111', border:'none', borderRadius:3, padding:'6px 14px', flexShrink:0}}>
+            <Lbl white sm bold>Reservar →</Lbl>
+          </Box>
+        </Row>
+        <Ann>CTA rojo = alta conversión</Ann>
+      </Box>
+
+      {/* ── CURSOS — Lista visual ── */}
+      <Box style={{width:W, background:'#fff', padding:16}}>
+        <Lbl bold style={{fontSize:15, marginBottom:10}}>Todos los cursos</Lbl>
+        <Row gap={8} style={{marginBottom:8}}>
+          {[
+            {icon:'🎸',name:'Guitarra',desc:'Acústica y eléctrica'},
+            {icon:'🎹',name:'Piano',desc:'Desde cero'},
+            {icon:'🎤',name:'Canto',desc:'Técnica vocal'},
+          ].map((c,i)=>(
+            <Box key={i} style={{flex:1, padding:10, background:'#f7f7f5', border:'1.5px solid #e8e8e4'}}>
+              <div style={{fontSize:22, marginBottom:4}}>{c.icon}</div>
+              <Lbl sm bold>{c.name}</Lbl>
+              <Lbl sm style={{color:'#888'}}>{c.desc}</Lbl>
+            </Box>
+          ))}
+        </Row>
+        <Row gap={8}>
+          {[
+            {icon:'🎻',name:'Violín'},{icon:'🥁',name:'Batería'},{icon:'🎨',name:'Artes'}
+          ].map((c,i)=>(
+            <Box key={i} style={{flex:1, padding:10, background:'#f7f7f5', border:'1.5px solid #e8e8e4'}}>
+              <div style={{fontSize:22, marginBottom:4}}>{c.icon}</div>
+              <Lbl sm bold>{c.name}</Lbl>
+            </Box>
+          ))}
+        </Row>
+      </Box>
+
+      {/* ── STUDIO — Dark section, transición visual ── */}
+      <Box dark style={{width:W, padding:16, background:'#0d0d0d'}}>
+        {/* Header diagonal visual cue */}
+        <div style={{width:'100%', height:3, background:'linear-gradient(90deg, #c0392b 0%, #8B0000 100%)', marginBottom:14}}></div>
+        <Lbl white bold style={{fontSize:17, marginBottom:4}}>Mozart Studio</Lbl>
+        <Lbl white sm style={{opacity:0.6, marginBottom:12}}>Producción musical profesional en Pucallpa</Lbl>
+        <ImgPh w="100%" h={90} dark label="foto real del estudio" style={{borderRadius:4, marginBottom:12}}/>
+        <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:6, marginBottom:12}}>
+          {['Grabación & mezcla','Voz en off','Doblajes','Sala de ensayo'].map((s,i)=>(
+            <Box key={i} style={{background:'#1e1e1e', border:'1px solid #333', padding:'6px 8px', borderRadius:2}}>
+              <Lbl white sm>◆ {s}</Lbl>
+            </Box>
+          ))}
+        </div>
+        <Row gap={8}>
+          <Btn label="Cotizar sesión" red full/>
+        </Row>
+        <Ann>Sección oscura = Studio<br/>transición visual al scrollear</Ann>
+      </Box>
+
+      {/* ── PORTAL ── */}
+      <Box style={{width:W, background:'#f7f7f5', padding:16}}>
+        <Row gap={10} align="center" style={{marginBottom:12}}>
+          <Box style={{background:'#c0392b', padding:'4px 10px', border:'none', borderRadius:2}}>
+            <Lbl white sm bold>Para estudiantes</Lbl>
+          </Box>
+          <Box style={{background:'transparent', padding:'4px 10px', border:'1.5px solid #ddd', borderRadius:2}}>
+            <Lbl sm>¿No tienes cuenta?</Lbl>
+          </Box>
+        </Row>
+        <Row gap={6} style={{marginBottom:10}}>
+          {['📅 Horario','📚 Materiales','📈 Progreso','🗓 Eventos'].map((item,i)=>(
+            <Box key={i} style={{flex:1, padding:8, background:'#fff', border:'1.5px solid #e0e0dc', textAlign:'center'}}>
+              <Lbl sm style={{fontSize:11, lineHeight:1.3}}>{item}</Lbl>
+            </Box>
+          ))}
+        </Row>
+        <Box style={{padding:8, background:'#fff', border:'1.5px solid #e0e0dc', display:'flex', gap:8, alignItems:'center'}}>
+          <Box style={{flex:1, padding:5, border:'1px solid #ddd', borderRadius:2}}>
+            <Lbl sm style={{color:'#bbb'}}>Email</Lbl>
+          </Box>
+          <Box style={{flex:1, padding:5, border:'1px solid #ddd', borderRadius:2}}>
+            <Lbl sm style={{color:'#bbb'}}>Contraseña</Lbl>
+          </Box>
+          <Btn label="→" red sm/>
+        </Box>
+        <Ann>Portal engagement<br/>4 secciones clave</Ann>
+      </Box>
+
+      {/* ── CONTACTO ── */}
+      <Box style={{width:W, background:'#fff', padding:16}}>
+        <Lbl bold style={{fontSize:15, marginBottom:10}}>Contacto</Lbl>
+        <Row gap={10}>
+          <Col gap={6} style={{flex:1}}>
+            <Box fillMid style={{padding:8}}>
+              <Lbl sm bold>📞 Escuela</Lbl>
+              <Lbl sm style={{color:'#666'}}>+51 944 489 876</Lbl>
+            </Box>
+            <Box fillMid style={{padding:8}}>
+              <Lbl sm bold>🎙 Studio</Lbl>
+              <Lbl sm style={{color:'#666'}}>+51 961 005 605</Lbl>
+            </Box>
+            <Box style={{background:'#25D366', border:'none', padding:'6px 10px', borderRadius:3}}>
+              <Lbl white sm bold>💬 WhatsApp directo</Lbl>
+            </Box>
+          </Col>
+          <ImgPh w={140} h={120} label="mapa\nPucallpa" style={{borderRadius:4, flexShrink:0}}/>
+        </Row>
+      </Box>
+
+      {/* ── FOOTER ── */}
+      <Box dark style={{width:W, padding:14, background:'#0d0d0d'}}>
+        <Row gap={8} align="center" style={{justifyContent:'space-between', marginBottom:8}}>
+          <Row gap={4} align="center">
+            <svg width="16" height="16" viewBox="0 0 22 22">
+              <polygon points="11,2 22,20 0,20" fill="#c0392b"/>
+              <circle cx="8" cy="17" r="2" fill="#c0392b"/>
+            </svg>
+            <Lbl white sm bold>MOZART</Lbl>
+          </Row>
+          <Row gap={6}>
+            {['fb','ig','tt'].map(s=>(
+              <Box key={s} style={{width:24, height:24, background:'#333', border:'none', borderRadius:3, display:'flex', alignItems:'center', justifyContent:'center'}}>
+                <Lbl white sm style={{fontSize:10}}>{s}</Lbl>
+              </Box>
+            ))}
+          </Row>
+        </Row>
+        <Divider/>
+        <Row gap={0} style={{justifyContent:'space-between', marginTop:6}}>
+          <Lbl white sm style={{opacity:0.5}}>Pucallpa, Perú</Lbl>
+          <Lbl white sm style={{opacity:0.5}}>ES | EN</Lbl>
+        </Row>
+      </Box>
+
+    </Col>
+  );
+};
+
+/* ═══ MAIN ═══ */
+const App = () => (
+  <DesignCanvas title="OZART — Wireframes" subtitle="2 propuestas de estructura web">
+    <DCSection id="variantes" title="Variantes de layout">
+      <DCArtboard id="wf-a" label="A — Split World (toggle nav)" width={420} height={1380}>
+        <WireframeA/>
+      </DCArtboard>
+      <DCArtboard id="wf-b" label="B — Unified Flow (scroll continuo)" width={420} height={1380}>
+        <WireframeB/>
+      </DCArtboard>
+    </DCSection>
+  </DesignCanvas>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+<div id="root"></div>
+</body>
+</html>

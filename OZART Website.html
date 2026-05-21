@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOZART — Escuela de Música & Studio | Pucallpa</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="components/Nav.jsx"></script>
+<script type="text/babel" src="components/Escuela.jsx"></script>
+<script type="text/babel" src="components/Studio.jsx"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: #f5f3ee; }
+  input, textarea, select { outline: none; }
+  input:focus, textarea:focus, select:focus { border-color: #C0392B !important; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accentColor": "#C0392B",
+  "fontStyle": "Barlow Condensed",
+  "showStats": true,
+  "whatsappFloat": true
+}/*EDITMODE-END*/;
+
+const ContactSection = ({ mode, lang }) => {
+  const isStudio = mode === 'studio';
+  const t = (es, en) => lang === 'es' ? es : en;
+  const bg = isStudio ? '#0a0a0a' : '#f5f3ee';
+  const textColor = isStudio ? '#fff' : '#0a0a0a';
+  const subColor = isStudio ? '#555' : '#888';
+  const cardBg = isStudio ? '#111' : '#fff';
+  const border = isStudio ? '#1e1e1e' : '#e8e4de';
+
+  return (
+    <section id="contacto" style={{ background: bg, padding: '80px 24px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+          <div style={{ width: 32, height: 3, background: '#C0392B' }}/>
+          <span style={{ fontFamily: 'Barlow', fontSize: 12, fontWeight: 600, letterSpacing: 3, textTransform: 'uppercase', color: '#C0392B' }}>
+            {t('Encuéntranos', 'Find us')}
+          </span>
+        </div>
+        <h2 style={{ fontFamily: 'Barlow Condensed', fontSize: 48, fontWeight: 800, color: textColor, marginBottom: 40, textTransform: 'uppercase' }}>
+          {t('Contacto', 'Contact')}
+        </h2>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40 }}>
+          {/* Escuela contact */}
+          <div style={{ background: cardBg, borderRadius: 4, padding: 28, border: `1px solid ${border}` }}>
+            <div style={{ fontFamily: 'Barlow Condensed', fontSize: 11, letterSpacing: 3, textTransform: 'uppercase', color: '#C0392B', marginBottom: 16, fontWeight: 600 }}>
+              {t('Escuela de Música', 'Music School')}
+            </div>
+            {[
+              { label: '+51 944 489 876' },
+              { label: 'escuelacontemporaneamozart@gmail.com' },
+              { label: 'Jr. las Alamedas Mz k Lt 03, Pucallpa, Perú' },
+            ].map((c, i) => (
+              <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 12, alignItems: 'flex-start', borderLeft: '2px solid #C0392B', paddingLeft: 10 }}>
+                <span style={{ fontFamily: 'Barlow', fontSize: 14, color: subColor, lineHeight: 1.5 }}>{c.label}</span>
+              </div>
+            ))}
+            <a href="mailto:escuelacontemporaneamozart@gmail.com" style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+              background: '#0a0a0a', color: '#fff', borderRadius: 3, padding: '11px 0',
+              fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 15,
+              letterSpacing: 1, textDecoration: 'none', marginTop: 20,
+            }}>
+              {t('Enviar correo', 'Send email')}
+            </a>
+          </div>
+          {/* Studio contact */}
+          <div style={{ background: isStudio ? '#161616' : '#0a0a0a', borderRadius: 4, padding: 28, border: `1px solid ${isStudio ? '#2a2a2a' : '#111'}` }}>
+            <div style={{ fontFamily: 'Barlow Condensed', fontSize: 11, letterSpacing: 3, textTransform: 'uppercase', color: '#C0392B', marginBottom: 16, fontWeight: 600 }}>
+              Mozart Studio
+            </div>
+            {[
+              { label: '+51 961 005 605' },
+              { label: 'juangrosvi@gmail.com' },
+              { label: 'Jr. las Alamedas Mz k Lt 03, Pucallpa, Perú' },
+            ].map((c, i) => (
+              <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 12, alignItems: 'flex-start', borderLeft: '2px solid #C0392B', paddingLeft: 10 }}>
+                <span style={{ fontFamily: 'Barlow', fontSize: 14, color: '#666', lineHeight: 1.5 }}>{c.label}</span>
+              </div>
+            ))}
+            <a href="mailto:juangrosvi@gmail.com" style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+              background: '#C0392B', color: '#fff', borderRadius: 3, padding: '11px 0',
+              fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 15,
+              letterSpacing: 1, textDecoration: 'none', marginTop: 20,
+            }}>
+              {t('Enviar correo', 'Send email')}
+            </a>
+          </div>
+        </div>
+        {/* Map placeholder */}
+        <div style={{
+          marginTop: 24, borderRadius: 4, overflow: 'hidden', height: 220,
+          background: isStudio ? '#111' : '#e8e4de',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          border: `1px solid ${border}`, flexDirection: 'column', gap: 8,
+        }}>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke={isStudio ? '#333' : '#bbb'} strokeWidth="1.5">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            <circle cx="12" cy="9" r="2.5"/>
+          </svg>
+          <span style={{ fontFamily: 'Barlow', fontSize: 13, color: isStudio ? '#444' : '#aaa' }}>
+            Jr. las Alamedas Mz k Lt 03, Pucallpa, Perú
+          </span>
+          <a href="https://maps.google.com/?q=Pucallpa+Peru" target="_blank" rel="noreferrer" style={{
+            fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 13, color: '#C0392B',
+            textDecoration: 'none', letterSpacing: 1,
+          }}>
+            {t('Abrir en Google Maps →', 'Open in Google Maps →')}
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Footer = ({ mode, lang }) => {
+  const isStudio = mode === 'studio';
+  const t = (es, en) => lang === 'es' ? es : en;
+  return (
+    <footer style={{ background: '#060606', padding: '40px 24px 24px' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 40, marginBottom: 40 }}>
+          {/* Brand */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: 16 }}>
+              <img src="uploads/logo.jpg" alt="Mozart" style={{ height: 36, width: 'auto' }}/>
+            </div>
+            <p style={{ fontFamily: 'Barlow', fontSize: 13, color: '#444', lineHeight: 1.65, maxWidth: 280 }}>
+              {t('Escuela Contemporánea de Música y Arte & Studio de Grabación Profesional. Pucallpa, Perú.', 'Contemporary Music & Art School and Professional Recording Studio. Pucallpa, Peru.')}
+            </p>
+            <div style={{ display: 'flex', gap: 8, marginTop: 20 }}>
+              {[
+                { label: 'fb', url: 'https://facebook.com' },
+                { label: 'ig', url: 'https://instagram.com' },
+                { label: 'tt', url: 'https://tiktok.com' },
+              ].map(s => (
+                <a key={s.label} href={s.url} target="_blank" rel="noreferrer" style={{
+                  width: 32, height: 32, background: '#111', borderRadius: 4,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  textDecoration: 'none', border: '1px solid #1e1e1e',
+                  fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 11,
+                  color: '#555', letterSpacing: 1, textTransform: 'uppercase',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#C0392B'; e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = '#111'; e.currentTarget.style.color = '#555'; }}
+                >{s.label}</a>
+              ))}
+            </div>
+          </div>
+          {/* Links */}
+          {[
+            { title: t('Escuela', 'School'), items: [t('Cursos','Courses'), t('Reservar','Book'), 'Portal', t('Docentes','Teachers')] },
+            { title: 'Studio', items: [t('Servicios','Services'), t('Galería','Gallery'), t('Cotizar','Quote'), t('Equipamiento','Equipment')] },
+            { title: t('Contacto', 'Contact'), items: ['WhatsApp', t('Email','Email'), t('Dirección','Address'), 'Pucallpa, Perú'] },
+          ].map((col, i) => (
+            <div key={i}>
+              <div style={{ fontFamily: 'Barlow Condensed', fontWeight: 700, fontSize: 13, letterSpacing: 2, textTransform: 'uppercase', color: '#C0392B', marginBottom: 16 }}>{col.title}</div>
+              {col.items.map((item, j) => (
+                <div key={j} style={{ fontFamily: 'Barlow', fontSize: 13, color: '#444', marginBottom: 8 }}>{item}</div>
+              ))}
+            </div>
+          ))}
+        </div>
+        <div style={{ borderTop: '1px solid #111', paddingTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontFamily: 'Barlow', fontSize: 12, color: '#333' }}>© 2025 Mozart Escuela & Studio — Pucallpa, Perú</span>
+          <span style={{ fontFamily: 'Barlow', fontSize: 12, color: '#333' }}>ES | EN</span>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+const WhatsAppFAB = ({ mode, tweaks }) => {
+  if (!tweaks.whatsappFloat) return null;
+  const phone = mode === 'studio' ? '51961005605' : '51944489876';
+  return (
+    <a href={`https://wa.me/${phone}`} target="_blank" rel="noreferrer"
+      style={{
+        position: 'fixed', bottom: 24, right: 24, zIndex: 200,
+        background: '#25D366', color: '#fff', borderRadius: 40,
+        padding: '12px 20px', display: 'flex', alignItems: 'center', gap: 10,
+        textDecoration: 'none', fontFamily: 'Barlow Condensed', fontWeight: 700,
+        fontSize: 15, letterSpacing: 1, textTransform: 'uppercase',
+        boxShadow: '0 4px 20px rgba(37,211,102,0.35)',
+        transition: 'transform 0.2s, box-shadow 0.2s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.05)'; }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; }}
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      WhatsApp
+    </a>
+  );
+};
+
+/* ── TWEAKS PANEL ── */
+const AppTweaks = ({ tweaks, setTweak }) => (
+  <TweaksPanel>
+    <TweakSection title="Identidad">
+      <TweakColor label="Color acento" tkey="accentColor" value={tweaks.accentColor} onChange={v => setTweak('accentColor', v)}/>
+    </TweakSection>
+    <TweakSection title="Elementos">
+      <TweakToggle label="Botón flotante WhatsApp" tkey="whatsappFloat" value={tweaks.whatsappFloat} onChange={v => setTweak('whatsappFloat', v)}/>
+      <TweakToggle label="Mostrar estadísticas" tkey="showStats" value={tweaks.showStats} onChange={v => setTweak('showStats', v)}/>
+    </TweakSection>
+  </TweaksPanel>
+);
+
+/* ── APP ── */
+const App = () => {
+  const [mode, setMode] = React.useState('escuela');
+  const [lang, setLang] = React.useState('es');
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const isStudio = mode === 'studio';
+
+  // Apply accent color to CSS variable
+  React.useEffect(() => {
+    document.documentElement.style.setProperty('--accent', tweaks.accentColor);
+  }, [tweaks.accentColor]);
+
+  return (
+    <div style={{ minHeight: '100vh', background: isStudio ? '#080808' : '#f5f3ee', transition: 'background 0.5s' }}>
+      <NavBar mode={mode} setMode={setMode} lang={lang} setLang={setLang}/>
+
+      <div style={{ transition: 'opacity 0.3s' }}>
+        {!isStudio ? (
+          <>
+            <EscuelaHero lang={lang} showStats={tweaks.showStats}/>
+            <ReservaSection lang={lang}/>
+            <CoursesSection lang={lang}/>
+            <PortalSection lang={lang}/>
+            <TestimonialsSection lang={lang}/>
+            <ContactSection mode={mode} lang={lang}/>
+          </>
+        ) : (
+          <>
+            <StudioHero lang={lang} showStats={tweaks.showStats}/>
+            <StudioServicesSection lang={lang}/>
+            <StudioGallery lang={lang}/>
+            <StudioQuoteSection lang={lang}/>
+          </>
+        )}
+      </div>
+
+      <Footer mode={mode} lang={lang}/>
+      <WhatsAppFAB mode={mode} tweaks={tweaks}/>
+      <AppTweaks tweaks={tweaks} setTweak={setTweak}/>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
