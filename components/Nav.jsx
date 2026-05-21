@@ -1,4 +1,4 @@
-/* Nav component — OZART v2 (mobile fixed) */
+/* Nav component — OZART v3 (single responsive nav, Escuela/Studio toggle) */
 const OzartLogo = ({ size = 32 }) =>
 <svg width={size} height={size} viewBox="0 0 44 44" fill="none">
     <polygon points="22,3 42,40 2,40" fill="white" opacity="0.95" />
@@ -8,24 +8,38 @@ const OzartLogo = ({ size = 32 }) =>
     <circle cx="13" cy="37" r="2.5" fill="white" />
   </svg>;
 
-/* Inject responsive CSS once */
-if (!document.getElementById('mozart-nav-css')) {
-  const s = document.createElement('style');
-  s.id = 'mozart-nav-css';
-  s.textContent = `
-    @media (max-width: 768px) {
-      .mozart-nav { height: auto !important; min-height: 56px !important; }
-      .mozart-nav-links { display: none !important; }
-      .mozart-hamburger { display: flex !important; }
-      .mozart-mobile-bar { display: flex !important; }
-    }
-    @media (min-width: 769px) {
-      .mozart-mobile-bar { display: none !important; }
-      .mozart-mobile-menu { display: none !important; }
-    }
-  `;
-  document.head.appendChild(s);
-}
+/* Single nav, responsive via CSS */
+const navStyle = document.createElement('style');
+navStyle.id = 'mozart-nav-styles';
+navStyle.textContent = `
+  .mozart-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(8,8,8,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid #1a1a1a; font-family: 'Barlow, sans-serif'; }
+  .mozart-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; gap: 12px; }
+  .mozart-toggle { display: flex; border-radius: 4px; overflow: hidden; border: 1px solid #333; flex-shrink: 0; }
+  .mozart-toggle-btn { padding: 5px 16px; border: none; cursor: pointer; font-family: 'Barlow Condensed, sans-serif'; font-weight: 600; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; transition: all 0.3s; background: transparent; color: #666; }
+  .mozart-toggle-btn.active { background: #C0392B; color: #fff; }
+  .mozart-links { display: flex; gap: 24px; margin-left: auto; align-items: center; }
+  .mozart-links a { font-family: 'Barlow, sans-serif'; font-size: 14px; font-weight: 500; color: #aaa; text-decoration: none; transition: color 0.2s; }
+  .mozart-links a:hover { color: #C0392B; }
+  .mozart-lang-btn { background: transparent; border: 1px solid #444; color: #888; border-radius: 3px; padding: 3px 8px; font-size: 11px; font-family: 'Barlow, sans-serif'; font-weight: 600; letter-spacing: 1px; cursor: pointer; text-transform: uppercase; }
+  .mozart-cta { background: #C0392B; color: #fff; font-family: 'Barlow Condensed, sans-serif'; font-weight: 700; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; padding: 8px 20px; border-radius: 3px; text-decoration: none; transition: background 0.2s; flex-shrink: 0; }
+  .mozart-cta:hover { background: #a93226; }
+  .mozart-hamburger { display: none; background: transparent; border: none; cursor: pointer; padding: 8px; margin-left: auto; }
+  .mozart-mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; bottom: 0; background: rgba(8,8,8,0.98); z-index: 99; padding: 24px 20px; flex-direction: column; gap: 0; }
+  .mozart-mobile-menu.open { display: flex; }
+  .mozart-mobile-link { display: block; font-family: 'Barlow, sans-serif'; font-size: 17px; font-weight: 500; color: #aaa; text-decoration: none; border-bottom: 1px solid #222; padding: 14px 0; }
+  .mozart-mobile-cta { background: #C0392B; color: #fff; font-family: 'Barlow Condensed, sans-serif'; font-weight: 700; font-size: 15px; letter-spacing: 1px; text-transform: uppercase; padding: 11px 22px; border-radius: 3px; text-decoration: none; text-align: center; margin-top: 20px; }
+  @media (max-width: 768px) {
+    .mozart-nav { height: 56px; }
+    .mozart-nav-inner { padding: 0 16px; gap: 8px; }
+    .mozart-links { display: none; }
+    .mozart-hamburger { display: flex; }
+    .mozart-lang-btn, .mozart-cta { display: none; }
+  }
+  @media (max-width: 400px) {
+    .mozart-toggle-btn { padding: 4px 10px; font-size: 11px; }
+  }
+`;
+document.head.appendChild(navStyle);
 
 const NavBar = ({ mode, setMode, lang, setLang }) => {
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -47,43 +61,38 @@ const NavBar = ({ mode, setMode, lang, setLang }) => {
   const links = isStudio ? studioLinks : escuelaLinks;
 
   return (
-    <nav className="mozart-nav" style={{
-      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
-      background: 'rgba(8,8,8,0.97)', backdropFilter: 'blur(12px)',
-      borderBottom: '1px solid #1a1a1a',
-      fontFamily: 'Barlow, sans-serif',
-      height: 64,
-      display: 'flex', alignItems: 'center'
-    }}>
-      {/* Mobile top bar: logo + logo + controls */}
-      <div className="mozart-mobile-bar" style={{
-        display: 'none', width: '100%', maxWidth: '100%', padding: '0 16px',
-        height: 56, alignItems: 'center', gap: 12
-      }}>
+    <nav className="mozart-nav">
+      <div className="mozart-nav-inner">
+        {/* Logo */}
         <a href="#" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
-          <img src="uploads/logo.jpg" alt="Mozart" style={{ height: 30, width: 'auto', display: 'block' }} />
+          <img src="uploads/logo.jpg" alt="Mozart" style={{ height: 34, width: 'auto', display: 'block' }} />
         </a>
-        {/* Mode toggle — visible on mobile */}
-        <div style={{
-          display: 'flex', borderRadius: 4, overflow: 'hidden',
-          border: '1px solid #333', flexShrink: 0
-        }}>
-          {[['escuela', lang === 'es' ? 'Esc' : 'Sc'],
-           ['studio', 'St']].map(([m, label]) =>
-            <button key={m} onClick={() => setMode(m)} style={{
-              padding: '4px 10px', border: 'none', cursor: 'pointer',
-              fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 600,
-              fontSize: 11, letterSpacing: 1, textTransform: 'uppercase',
-              background: mode === m ? '#C0392B' : 'transparent',
-              color: mode === m ? '#fff' : '#666'
-            }}>{label}</button>
+
+        {/* Toggle — always visible */}
+        <div className="mozart-toggle">
+          {[['escuela', lang === 'es' ? 'Escuela' : 'School'],
+           ['studio', 'Studio']].map(([m, label]) =>
+            <button key={m} onClick={() => { setMode(m); setMenuOpen(false); }} className={`mozart-toggle-btn ${mode === m ? 'active' : ''}`}>
+              {label}
+            </button>
           )}
         </div>
-        {/* Hamburger */}
-        <button onClick={() => setMenuOpen(!menuOpen)} className="mozart-hamburger" style={{
-          display: 'none', background: 'transparent', border: 'none',
-          cursor: 'pointer', padding: 8, marginLeft: 'auto'
-        }}>
+
+        {/* Desktop links */}
+        <div className="mozart-links">
+          {links.map((l, i) =>
+            <a key={i} href={l.href}>{l.label}</a>
+          )}
+          <button className="mozart-lang-btn" onClick={() => setLang(lang === 'es' ? 'en' : 'es')}>
+            {lang === 'es' ? 'EN' : 'ES'}
+          </button>
+          <a href="#reserva" className="mozart-cta">
+            {lang === 'es' ? 'Inscríbete' : 'Enroll'}
+          </a>
+        </div>
+
+        {/* Hamburger (mobile only) */}
+        <button className="mozart-hamburger" onClick={() => setMenuOpen(!menuOpen)}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2">
             {menuOpen
               ? <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>
@@ -93,89 +102,15 @@ const NavBar = ({ mode, setMode, lang, setLang }) => {
         </button>
       </div>
 
-      {/* Desktop: logo + toggle + links */}
-      <div style={{
-        maxWidth: 1200, margin: '0 auto', padding: '0 24px', width: '100%',
-        display: 'flex', alignItems: 'center', gap: 16
-      }}>
-        <a href="#" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}>
-          <img src="uploads/logo.jpg" alt="Mozart" style={{ height: 36, width: 'auto', display: 'block' }} />
-        </a>
-
-        {/* Mode toggle */}
-        <div style={{
-          display: 'flex', borderRadius: 4, overflow: 'hidden',
-          border: '1px solid #333', marginLeft: 8, flexShrink: 0
-        }}>
-          {[['escuela', lang === 'es' ? 'Escuela' : 'School'],
-           ['studio', 'Studio']].map(([m, label]) =>
-            <button key={m} onClick={() => setMode(m)} style={{
-              padding: '5px 16px', border: 'none', cursor: 'pointer',
-              fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 600,
-              fontSize: 13, letterSpacing: 1, textTransform: 'uppercase',
-              transition: 'all 0.3s',
-              background: mode === m ? '#C0392B' : 'transparent',
-              color: mode === m ? '#fff' : '#666'
-            }}>{label}</button>
-          )}
-        </div>
-
-        {/* Desktop links */}
-        <div className="mozart-nav-links" style={{ display: 'flex', gap: 28, marginLeft: 'auto', alignItems: 'center' }}>
-          {links.map((l, i) =>
-            <a key={i} href={l.href} style={{
-              fontFamily: 'Barlow, sans-serif', fontSize: 14, fontWeight: 500,
-              color: '#aaa', textDecoration: 'none', transition: 'color 0.2s'
-            }}
-            onMouseEnter={(e) => e.target.style.color = '#C0392B'}
-            onMouseLeave={(e) => e.target.style.color = '#aaa'}>
-              {l.label}</a>
-          )}
-          <button onClick={() => setLang(lang === 'es' ? 'en' : 'es')} style={{
-            background: 'transparent', border: '1px solid #444',
-            color: '#888', borderRadius: 3,
-            padding: '3px 8px', fontSize: 11, fontFamily: 'Barlow, sans-serif',
-            fontWeight: 600, letterSpacing: 1, cursor: 'pointer',
-            textTransform: 'uppercase'
-          }}>{lang === 'es' ? 'EN' : 'ES'}</button>
-          <a href="#reserva" style={{
-            background: '#C0392B', color: '#fff',
-            fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700,
-            fontSize: 14, letterSpacing: 1, textTransform: 'uppercase',
-            padding: '8px 20px', borderRadius: 3, textDecoration: 'none',
-            transition: 'background 0.2s'
-          }}
-          onMouseEnter={(e) => e.target.style.background = '#a93226'}
-          onMouseLeave={(e) => e.target.style.background = '#C0392B'}>
-            {lang === 'es' ? 'Inscríbete' : 'Enroll'}</a>
-        </div>
-      </div>
-
       {/* Mobile menu */}
-      {menuOpen && (
-        <div className="mozart-mobile-menu" style={{
-          position: 'fixed', top: 56, left: 0, right: 0, bottom: 0,
-          background: 'rgba(8,8,8,0.98)', zIndex: 99,
-          padding: '24px 20px'
-        }}>
-          {links.map((l, i) =>
-            <a key={i} href={l.href} onClick={() => setMenuOpen(false)} style={{
-              display: 'block', fontFamily: 'Barlow, sans-serif', fontSize: 17, fontWeight: 500,
-              color: '#aaa', textDecoration: 'none',
-              borderBottom: '1px solid #222', padding: '14px 0'
-            }}>{l.label}</a>
-          )}
-          <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
-            <a href="#reserva" onClick={() => setMenuOpen(false)} style={{
-              background: '#C0392B', color: '#fff',
-              fontFamily: 'Barlow Condensed, sans-serif', fontWeight: 700,
-              fontSize: 15, letterSpacing: 1, textTransform: 'uppercase',
-              padding: '11px 22px', borderRadius: 3, textDecoration: 'none',
-              textAlign: 'center'
-            }}>{lang === 'es' ? 'Inscríbete' : 'Enroll'}</a>
-          </div>
-        </div>
-      )}
+      <div className={`mozart-mobile-menu ${menuOpen ? 'open' : ''}`}>
+        {links.map((l, i) =>
+          <a key={i} href={l.href} className="mozart-mobile-link" onClick={() => setMenuOpen(false)}>{l.label}</a>
+        )}
+        <a href="#reserva" className="mozart-mobile-cta" onClick={() => setMenuOpen(false)}>
+          {lang === 'es' ? 'Inscríbete' : 'Enroll'}
+        </a>
+      </div>
     </nav>
   );
 };
