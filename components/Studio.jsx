@@ -35,7 +35,7 @@ const StudioHero = ({ lang }) => {
       }}/>
 
       <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%', position: 'relative', zIndex: 1 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
+        <div className="mozart-hero-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
               <div style={{ width: 40, height: 3, background: '#C0392B', borderRadius: 2 }}/>
@@ -93,7 +93,7 @@ const StudioHero = ({ lang }) => {
           </div>
           {/* Photo */}
           <div style={{ position: 'relative' }}>
-            <div style={{
+            <div className="mozart-hero-img" style={{
               borderRadius: 4, overflow: 'hidden', aspectRatio: '4/3',
               border: '1px solid #1a1a1a',
             }}>
@@ -137,7 +137,7 @@ const StudioServicesSection = ({ lang }) => {
         <h2 style={{ fontFamily: 'Barlow Condensed, sans-serif', fontSize: 48, fontWeight: 800, color: '#fff', marginBottom: 40, textTransform: 'uppercase' }}>
           {t('Servicios', 'Services')}
         </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
+        <div className="mozart-services-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 2 }}>
           {STUDIO_SERVICES.map((s, i) => (
             <div key={i} style={{
               background: '#111', overflow: 'hidden',
@@ -221,7 +221,7 @@ const StudioGallery = ({ lang }) => {
           </div>
         </div>
         {/* 3-col grid placeholders */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+        <div className="mozart-gallery-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
           {[t('Sala de ensayo','Rehearsal room'), t('Cabina vocal','Vocal booth'), t('Equipamiento','Equipment')].map((label, i) => (
             <div key={i} style={{
               background: '#111', borderRadius: 4, height: 180,
@@ -259,7 +259,7 @@ const StudioQuoteSection = ({ lang }) => {
   return (
     <section id="contacto" style={{ background: '#0d0d0d', padding: '80px 24px' }}>
       <div style={{ maxWidth: 860, margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'start' }}>
+        <div className="mozart-quote-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'start' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
               <div style={{ width: 32, height: 3, background: '#C0392B' }}/>
